@@ -60,14 +60,14 @@ services:
       - key: RAILS_LOG_TO_STDOUT
         value: true
 
+  # Redis service
+  - type: redis
+    name: maybe-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+
 databases:
   - name: maybe-db
     databaseName: maybe_production
     user: maybe
     plan: starter
-
-services:
-  - type: redis
-    name: maybe-redis
-    plan: starter
-    maxmemoryPolicy: allkeys-lru
