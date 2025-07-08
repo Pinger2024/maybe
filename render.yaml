@@ -4,7 +4,7 @@ services:
     name: maybe-web
     env: ruby
     plan: starter
-    buildCommand: SECRET_KEY_BASE=dummy ./bin/render-build.sh
+    buildCommand: export SECRET_KEY_BASE=dummy && ./bin/render-build.sh
     startCommand: ./bin/rails server
     envVars:
       - key: RAILS_ENV
