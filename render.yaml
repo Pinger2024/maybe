@@ -1,0 +1,73 @@
+services:
+  # Main web application
+  - type: web
+    name: maybe-web
+    env: ruby
+    plan: starter
+    buildCommand: ./bin/render-build.sh
+    startCommand: ./bin/rails server
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: SELF_HOSTED
+        value: true
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: maybe-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: maybe-redis
+          property: connectionString
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: RAILS_MAX_THREADS
+        value: 5
+      - key: WEB_CONCURRENCY
+        value: 2
+    healthCheckPath: /up
+    domains:
+      - maybe-app.onrender.com # Replace with your custom domain
+
+  # Background job worker (Sidekiq)
+  - type: worker
+    name: maybe-worker
+    env: ruby
+    plan: starter
+    buildCommand: ./bin/render-build.sh
+    startCommand: bundle exec sidekiq
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: SELF_HOSTED
+        value: true
+      - key: SECRET_KEY_BASE
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: maybe-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: maybe-redis
+          property: connectionString
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+
+databases:
+  - name: maybe-db
+    databaseName: maybe_production
+    user: maybe
+    plan: starter
+
+services:
+  - type: redis
+    name: maybe-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
