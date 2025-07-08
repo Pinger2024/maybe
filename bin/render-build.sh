@@ -5,9 +5,9 @@ echo "Installing gems..."
 bundle install
 
 echo "Clobbering old assets..."
-bundle exec rails assets:clobber
+SECRET_KEY_BASE=dummy bundle exec rails assets:clobber
 
 echo "Precompiling assets for production..."
-bundle exec rails assets:precompile
+SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 echo "✅ Build complete"
