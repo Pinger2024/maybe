@@ -71,4 +71,4 @@ databases:
   - name: maybe-db
     databaseName: maybe_production
     user: maybe
-    plan: starter
+    plan: free
