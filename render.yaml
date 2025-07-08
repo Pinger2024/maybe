@@ -65,6 +65,7 @@ services:
     name: maybe-redis
     plan: starter
     maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
 
 databases:
   - name: maybe-db
